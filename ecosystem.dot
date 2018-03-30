@@ -1,34 +1,32 @@
-digraph G {compound=true /*ratio= 0.42 */ graph [fontname="PT Sans" fontsize="38" bgcolor="#111111" fontcolor="white" style="dashed"]; node [fontname="PT Sans" fontweight="bold" shape="none" fontcolor="white"]; edge [color="#E46E2E90"]
-label="My Mission to Jupyter" labelloc="t"; "@bollwyvl"
-"@bollwyvl"
-nbviewer[shape="ellipse" color="#F37726"]
+digraph G {compound=true ratio="0.5" graph [fontname="Merriweather" fontsize="38" bgcolor="#ceb576" fontcolor="#553e27" style="dotted"]; node [fontname="Merriweather" fontweight="bold" shape="none" fontcolor="#684a13"]; edge [color="#5d321990"]
+label="Jupyter Upstream" labelloc="t";
+nbviewer[shape="ellipse" style=filled fillcolor="#553e27" fontcolor="#ceb576"]
 label="Where we're going"; 
-IPython[shape="ellipse" color="#204a87"]; "@bollwyvl"[style="invisible"];
-Jupyter[shape="ellipse" color="#F37726"]
-mybinder[shape="ellipse" color="#E66581"]
+IPython[shape="ellipse" style=filled fillcolor="#553e27" fontcolor="#ceb576"];
+Jupyter[shape="ellipse" style=filled fillcolor="#553e27" fontcolor="#ceb576"]
+mybinder[shape="ellipse" style=filled fillcolor="#553e27" fontcolor="#ceb576"]
+label="First there was the REPL"
 subgraph cluster_cli {label="REPL"; read -> execute -> print -> read }; label="and it was good"
-"@gvanrossum" -> python -> execute; label="and now for something completely different"; 
-subgraph cluster_community {label="community" "@gvanrossum" "@fperez" "@bollwyvl"}
-{"@fperez", python} -> {IPython}[lhead=cluster_ipython]; IPython -> read[lhead=cluster_cli]
-subgraph cluster_ipython {label="IPython" IPython ".traitlets" ".parallel" ".nbconvert"}
-subgraph cluster_community {"@gvanrossum" "@fperez" "@ellisonbg"}
+python -> execute; label="and now for something completely different"; 
+{python} -> {IPython}[lhead=cluster_ipython]; IPython -> read[lhead=cluster_cli]
+subgraph cluster_pypi {label=pypi subgraph cluster_ipython {label="IPython" IPython ".traitlets" ".parallel" ".nbconvert"} }
 label="New blood"
-subgraph cluster_community{"@enthought"} {"@enthought" python} -> traits[lhead=cluster_pypi]; traits -> ".traitlets"[lhead=cluster_ipython]
-{python, "@fperez" "@ellisonbg"} -> pyzmq[lhead=cluster_pypi]; {IPython pyzmq} -> ".parallel" -> cluster; subgraph cluster_cli {execute -> cluster -> print}
+python -> traits[lhead=cluster_pypi]; traits -> ".traitlets"[lhead=cluster_ipython]; subgraph cluster_pypi {traits}
+{python} -> pyzmq[lhead=cluster_pypi]; {IPython pyzmq} -> ".parallel" -> cluster; subgraph cluster_cli {execute -> cluster -> print} subgraph cluster_pypi {pyzmq}
 label="Beyond the command line"
-subgraph cluster_pypi {label=pypi; tornado jinja traits pyzmq}; python -> {jinja, tornado}[lhead=cluster_pypi];
+subgraph cluster_pypi {label=pypi tornado jinja traits pyzmq}; python -> {jinja, tornado}[lhead=cluster_pypi];
 subgraph cluster_languages {label="languages" python javascript}
-subgraph cluster_bower {label=bower javascript -> {jquery requirejs CodeMirror}[lhead=cluster_bower]}
+subgraph cluster_bower {label=bower javascript -> {jquery requirejs CodeMirror MathJax}[lhead=cluster_bower]}
 label="Begin JavaScript Fatigue"
-subgraph cluster_community {"@minrk"}
-{jquery, IPython, jinja, tornado, CodeMirror, pyzmq, requirejs, "@ellisonbg"} -> ".html" -> html; subgraph cluster_ipython { ".html" }; subgraph cluster_html {label=Browser html}
-subgraph cluster_bower {jquery -> bootstrap -> ".html"}
-subgraph cluster_bower {javascript -> underscore; {jquery, underscore} -> backbone}; {backbone, ".html"} -> ".widgets"; subgraph cluster_ipython { ".widgets" }
-IPython -> {ipykernel, traitlets, nbconvert, nbformat, jupyter_client}[lhead=cluster_tbs,ltail=cluster_ipython]; ".html" -> notebook; ".parallel" -> ipyparallel; jinja -> nbconvert -> html
+subgraph cluster_html {label="Browser" html}
 
-label="The Repo is too big"
-subgraph cluster_tbs {label="the big split"; {Jupyter, ipykernel, nbformat, nbconvert, jupyter_client, traitlets} -> notebook; nbformat -> nbconvert; ipyparallel; ".traitlets" -> traitlets}
-{".widgets", notebook, traitlets} -> ipywidgets
+subgraph cluster_pypi {subgraph cluster_ipython { ".html" }} {jquery, IPython, jinja, tornado, CodeMirror, pyzmq, requirejs} -> ".html" -> html;
+subgraph cluster_bower {jquery -> bootstrap; {bootstrap MathJax} -> ".html"}
+subgraph cluster_bower {javascript -> underscore; {jquery underscore} -> backbone}; {backbone ".html"} -> ".widgets"; subgraph cluster_ipython { ".widgets" }
+IPython -> {ipykernel traitlets nbconvert nbformat jupyter_client}[lhead=cluster_tbs ltail=cluster_ipython]; ".html" -> notebook; ".parallel" -> ipyparallel; jinja -> nbconvert -> html
+
+label="The Big Split" subgraph cluster_pypi { subgraph cluster_tbs {label="jupyter"; {Jupyter, ipykernel, nbformat, nbconvert, jupyter_client, traitlets} -> notebook; nbformat -> nbconvert; ipyparallel; ".traitlets" -> traitlets}}
+subgraph cluster_pypi {subgraph cluster_widgets {label="widgets" ipywidgets}} {".widgets", notebook, traitlets} -> ipywidgets
 label="What about other languages?"
 subgraph cluster_languages {julia octave R haskell}
 subgraph cluster_kernels {label="Kernels"; ipykernel -> {irkernel, ijulia, ihaskell, callisto, octave_kernel, ijavascript}}; julia -> ijulia; R -> irkernel; haskell -> ihaskell; octave -> octave_kernel; javascript -> ijavascript
