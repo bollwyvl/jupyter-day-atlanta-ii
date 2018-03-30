@@ -1,0 +1,67 @@
+digraph G {compound=true /*ratio= 0.42 */ graph [fontname="PT Sans" fontsize="38" bgcolor="#111111" fontcolor="white" style="dashed"]; node [fontname="PT Sans" fontweight="bold" shape="none" fontcolor="white"]; edge [color="#E46E2E90"]
+label="My Mission to Jupyter" labelloc="t"; "@bollwyvl"
+"@bollwyvl"
+nbviewer[shape="ellipse" color="#F37726"]
+label="Where we're going"; 
+IPython[shape="ellipse" color="#204a87"]; "@bollwyvl"[style="invisible"];
+Jupyter[shape="ellipse" color="#F37726"]
+mybinder[shape="ellipse" color="#E66581"]
+subgraph cluster_cli {label="REPL"; read -> execute -> print -> read }; label="and it was good"
+"@gvanrossum" -> python -> execute; label="and now for something completely different"; 
+subgraph cluster_community {label="community" "@gvanrossum" "@fperez" "@bollwyvl"}
+{"@fperez", python} -> {IPython}[lhead=cluster_ipython]; IPython -> read[lhead=cluster_cli]
+subgraph cluster_ipython {label="IPython" IPython ".traitlets" ".parallel" ".nbconvert"}
+subgraph cluster_community {"@gvanrossum" "@fperez" "@ellisonbg"}
+label="New blood"
+subgraph cluster_community{"@enthought"} {"@enthought" python} -> traits[lhead=cluster_pypi]; traits -> ".traitlets"[lhead=cluster_ipython]
+{python, "@fperez" "@ellisonbg"} -> pyzmq[lhead=cluster_pypi]; {IPython pyzmq} -> ".parallel" -> cluster; subgraph cluster_cli {execute -> cluster -> print}
+label="Beyond the command line"
+subgraph cluster_pypi {label=pypi; tornado jinja traits pyzmq}; python -> {jinja, tornado}[lhead=cluster_pypi];
+subgraph cluster_languages {label="languages" python javascript}
+subgraph cluster_bower {label=bower javascript -> {jquery requirejs CodeMirror}[lhead=cluster_bower]}
+label="Begin JavaScript Fatigue"
+subgraph cluster_community {"@minrk"}
+{jquery, IPython, jinja, tornado, CodeMirror, pyzmq, requirejs, "@ellisonbg"} -> ".html" -> html; subgraph cluster_ipython { ".html" }; subgraph cluster_html {label=Browser html}
+subgraph cluster_bower {jquery -> bootstrap -> ".html"}
+subgraph cluster_bower {javascript -> underscore; {jquery, underscore} -> backbone}; {backbone, ".html"} -> ".widgets"; subgraph cluster_ipython { ".widgets" }
+IPython -> {ipykernel, traitlets, nbconvert, nbformat, jupyter_client}[lhead=cluster_tbs,ltail=cluster_ipython]; ".html" -> notebook; ".parallel" -> ipyparallel; jinja -> nbconvert -> html
+
+label="The Repo is too big"
+subgraph cluster_tbs {label="the big split"; {Jupyter, ipykernel, nbformat, nbconvert, jupyter_client, traitlets} -> notebook; nbformat -> nbconvert; ipyparallel; ".traitlets" -> traitlets}
+{".widgets", notebook, traitlets} -> ipywidgets
+label="What about other languages?"
+subgraph cluster_languages {julia octave R haskell}
+subgraph cluster_kernels {label="Kernels"; ipykernel -> {irkernel, ijulia, ihaskell, callisto, octave_kernel, ijavascript}}; julia -> ijulia; R -> irkernel; haskell -> ihaskell; octave -> octave_kernel; javascript -> ijavascript
+label="Ok, so what's nbviewer?"
+subgraph cluster_tbs{{tornado, jinja, nbconvert} -> nbviewer}
+nbviewer -> "nbviewer.jupyter.org"; subgraph cluster_html{ "nbviewer.jupyter.org" }
+subgraph cluster_bower {javascript -> revealjs}; 
+{revealjs, nbconvert} -> ".slides"
+".slides" -> nbviewer
+label="Suddenly, GitHub"
+subgraph cluster_github{label="github" github -> html}
+subgraph cluster_docker{label="Docker" docker}; {docker, nbviewer} -> tmpnb;
+subgraph cluster_html {tmpnb -> mybinder}
+label="The future is Python 3"
+python -> python3; subgraph cluster_languages {python3}; 
+python3 -> jupyterhub; subgraph cluster_jupyterhub {label="JupyterHub" jupyterhub repo2docker};
+label="Docker is a key enabler of services";
+subgraph cluster_docker {docker -> kubernetes}; 
+{github, jupyterhub, kubernetes, repo2docker, binderhub} -> mybinder
+subgraph cluster_html {mybinder}
+label="Beyond the notebook"
+ipywidgets -> kernel_gateway -> enterprise_kernel_gateway
+label="JavaScript fatigue, continued"
+subgraph cluster_npm {label="npm" javascript -> {typescript, reactjs}[lhead=cluster_npm]}
+label="nteract: Jupyter (with more emoji)"
+subgraph cluster_nteract {{reactjs, nbviewer, nteract} -> commuter}
+subgraph cluster_nteract {nbconvert -> papermill}
+subgraph cluster_npm{electronjs}; {reactjs, notebook, electronjs} -> nteract; subgraph cluster_nteract {label="nteract" nteract}
+{phosphorjs, notebook, reactjs, typescript} -> JupyterLab; subgraph cluster_lab {label="JupyterLab" JupyterLab}
+label="Meanwhile back at the Lab"
+subgraph cluster_phosphor{label="phosphor" typescript -> phosphorjs}
+subgraph cluster_lab{ JupyterLab -> {jlab_googledrive, jupyterlab_app}; electronjs -> jupyterlab_app}
+{ipywidgets, phosphorjs} -> jupyter_js_widgets; subgraph cluster_npm {phosphorjs}
+subgraph cluster_widgets {label="widgets" ipywidgets -> {bqplot, pythreejs, ipyvolume, ipyleaflet}}
+{reactjs} -> notebook
+}
