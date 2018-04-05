@@ -11,7 +11,7 @@ label="1991: how might we plot relationships between things?" C -> graphviz -> d
 label="1991: and now for something completely different"; C -> python -> evaluate subgraph cluster_languages {python}
 label="2001: how might we make science in python more interactive?" {python gnuplot} -> {IPython}[lhead=cluster_pypi]; IPython -> read[lhead=cluster_cli]
 label="2003: how might we better reuse python code?" subgraph cluster_pypi {label=pypi subgraph cluster_ipython {label="ipython" IPython}}
-label="2006: " IPython -> sage -> read_web[lhead=cluster_web] subgraph cluster_repl {subgraph cluster_web {label=web read_web -> evaluate -> print_web -> read_web}} read_web[label=read] evaluate_web[label=evaluate] save_web[label=save] print_web[label=print] load_web[label=load]
+label="2006: how might we use the browser to do math?" IPython -> sage -> read_web[lhead=cluster_web] subgraph cluster_repl {subgraph cluster_web {label=web read_web -> evaluate -> print_web -> read_web}} read_web[label=read] evaluate_web[label=evaluate] save_web[label=save] print_web[label=print] load_web[label=load]
 label="2008: how might we work with many computers interactively?" subgraph cluster_pypi { subgraph cluster_ipython {".parallel" -> IPython} } subgraph cluster_repl {subgraph cluster_cli {evaluate -> cluster -> print}} ".parallel" -> cluster
 label="2009: how might we generalize the observer pattern in python?" subgraph cluster_pypi { subgraph cluster_ipython {".util.traitlets" -> IPython} }
 label="2010: how might we generalize 'evaluate'?" C -> zmq -> pyzmq -> ".parallel"; subgraph cluster_pypi {pyzmq}
