@@ -1,0 +1,11 @@
+name: jupyterday-atlanta-ii
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - graphviz
+  - jupyterlab >=0.34,<0.35
+  - python >=3.6,<3.7
+  - nodejs >=8,<9
